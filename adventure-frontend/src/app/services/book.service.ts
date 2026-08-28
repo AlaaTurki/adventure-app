@@ -46,4 +46,13 @@ export class BookService {
   chooseOption(gameId: string, optionIndex: number): Observable<any> {
     return this.http.post<any>(`${this.gameApiUrl}/${gameId}/choices`, { optionIndex });
   }
+
+  saveGame(gameId: string): Observable<any> {
+    return this.http.post<any>(`${this.gameApiUrl}/${gameId}/save`, {});
+  }
+
+  listSaved(bookId?: number): Observable<any> {
+    const params = bookId ? { params: { bookId: String(bookId) } } : {} as any;
+    return this.http.get<any>(`${this.gameApiUrl}/saved`, params);
+  }
 }

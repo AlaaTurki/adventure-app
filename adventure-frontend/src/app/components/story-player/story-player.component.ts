@@ -145,12 +145,48 @@ export class StoryPlayerComponent implements OnInit {
   }
 
   saveProgress(): void {
-    this.gameStateService.saveProgress();
+    if (!this.gameState?.gameId) {
+      // fallback to local save
+      this.gameStateService.saveProgress();
+      return;
+    }
+
+    this.loading = true;
+    this.bookService.saveGame(this.gameState.gameId).subscribe({
+      next: () => {
+        this.gameStateService.saveProgress(); // keep local copy too
+        this.loading = false;
+      },
+      error: () => {
+        // fallback: persist locally
+        this.gameStateService.saveProgress();
+        this.error = 'Failed to save to server; saved locally instead.';
+        this.loading = false;
+      }
+    });
   }
 
   pauseGame(): void {
-    this.gameStateService.pauseGame();
-    this.router.navigate(['/']);
+    // try server save first if possible, then pause locally and navigate
+    if (this.gameState?.gameId) {
+      this.loading = true;
+      this.bookService.saveGame(this.gameState.gameId).subscribe({
+        next: () => {
+          this.gameStateService.pauseGame();
+          this.loading = false;
+          this.router.navigate(['/']);
+        },
+        error: () => {
+          // fallback to local pause
+          this.gameStateService.pauseGame();
+          this.loading = false;
+          this.router.navigate(['/']);
+        }
+      });
+    } else {
+      this.gameStateService.pauseGame();
+      this.router.navigate(['/']);
+    }
   }
 
   goBack(): void {

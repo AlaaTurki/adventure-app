@@ -31,4 +31,15 @@ public class GameController {
     public ResponseEntity<GameDTO> chooseOption(@PathVariable UUID gameId, @RequestBody ChoiceRequest request) {
         return ResponseEntity.ok(gameService.chooseOption(gameId, request.getOptionIndex()));
     }
+
+    @PostMapping("/{gameId}/save")
+    public ResponseEntity<?> saveGame(@PathVariable UUID gameId) {
+        gameService.saveGameSnapshot(gameId);
+        return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/saved")
+    public ResponseEntity<?> listSavedGames(@RequestParam(required = false) Long bookId) {
+        return ResponseEntity.ok(gameService.listSavedGames(bookId));
+    }
 }

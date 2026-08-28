@@ -7,13 +7,20 @@ import com.pictet.adventure.model.Choice;
 import com.pictet.adventure.model.Game;
 import com.pictet.adventure.model.GameStatus;
 import com.pictet.adventure.model.Section;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.pictet.adventure.repository.BookRepository;
 import com.pictet.adventure.repository.GameRepository;
+import com.pictet.adventure.repository.SavedGameRepository;
+import com.pictet.adventure.model.SavedGame;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import java.time.Instant;
+import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 public class GameService {
@@ -23,6 +30,12 @@ public class GameService {
 
     @Autowired
     private BookRepository bookRepository;
+
+    @Autowired
+    private SavedGameRepository savedGameRepository;
+
+    @Autowired
+    private ObjectMapper objectMapper;
 
     public GameDTO startGame(Long bookId) {
         Book book = bookRepository.findById(bookId)
@@ -107,6 +120,42 @@ public class GameService {
 
         Game savedGame = gameRepository.save(game);
         return toDto(savedGame, book.getTitle());
+    }
+
+    public void saveGameSnapshot(UUID gameId) {
+        Game game = gameRepository.findById(gameId)
+                .orElseThrow(() -> new AdventureException("Game not found with id: " + gameId, HttpStatus.NOT_FOUND));
+
+        try {
+            String snapshot = objectMapper.writeValueAsString(toDto(game, bookRepository.findById(game.getBookId()).map(b -> b.getTitle()).orElse("")));
+            SavedGame saved = new SavedGame();
+            saved.setGameId(game.getId());
+            saved.setBookId(game.getBookId());
+            saved.setCreatedAt(Instant.now());
+            saved.setSnapshot(snapshot);
+            savedGameRepository.save(saved);
+        } catch (JsonProcessingException e) {
+            throw new AdventureException("Failed to serialize game snapshot", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    public java.util.List<com.pictet.adventure.dto.SavedGameDTO> listSavedGames(Long bookId) {
+        java.util.List<SavedGame> list;
+        if (bookId != null) {
+            list = savedGameRepository.findByBookId(bookId);
+        } else {
+            list = savedGameRepository.findAll();
+        }
+
+        return list.stream().map(s -> {
+            com.pictet.adventure.dto.SavedGameDTO dto = new com.pictet.adventure.dto.SavedGameDTO();
+            dto.setId(s.getId());
+            dto.setGameId(s.getGameId());
+            dto.setBookId(s.getBookId());
+            dto.setCreatedAt(s.getCreatedAt());
+            dto.setSnapshot(s.getSnapshot());
+            return dto;
+        }).collect(java.util.stream.Collectors.toList());
     }
 
     private GameDTO toDto(Game game, String title) {
