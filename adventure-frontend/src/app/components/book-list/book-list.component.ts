@@ -59,7 +59,6 @@ export class BookListComponent implements OnInit {
         (this.activeFilter === 'Fantasy' && (book.difficulty === 'EASY' || book.difficulty === 'MEDIUM')) ||
         (this.activeFilter === 'Adventure' && book.difficulty === 'EASY') ||
         (this.activeFilter === 'High Fantasy' && book.difficulty === 'HARD') ||
-        (this.activeFilter === 'Steampunk Mystery' && book.title.toLowerCase().includes('jade')) ||
         (this.activeFilter === 'Easy' && book.difficulty === 'EASY') ||
         (this.activeFilter === 'Medium' && book.difficulty === 'MEDIUM') ||
         (this.activeFilter === 'Hard' && book.difficulty === 'HARD');
@@ -106,31 +105,11 @@ export class BookListComponent implements OnInit {
   }
 
   getBookDescription(book: Book): string {
-    const title = book.title.toLowerCase();
-    if (title.includes('crystal')) {
-      return 'Deep beneath the mountain lies a network of crystal caves filled with ancient magic and dangerous creatures. Your choices will determine whether you emerge as a hero or become another lost soul in the depths.';
-    }
-    if (title.includes('jade')) {
-      return 'Set sail on the treacherous Jade Sea where pirates rule and treasure awaits the bold. Navigate through storms, rival crews, and ancient curses in this swashbuckling adventure.';
-    }
-    if (title.includes('dragon')) {
-      return 'The kingdom calls for a dragon hunter, and the mountain holds secrets older than most empires. Face fire, fear, and destiny in one final reckless sprint.';
-    }
-    return 'An ancient prison door, a whispering key, and a choice that may change your fate. Survive the darkness and uncover what truly matters.';
+    return book.description ?? 'No description available.';
   }
 
   getBookTags(book: Book): string[] {
-    const title = book.title.toLowerCase();
-    if (title.includes('crystal')) {
-      return ['Magic', 'Underground', 'Crystals'];
-    }
-    if (title.includes('jade')) {
-      return ['Pirates', 'Ocean', 'Treasure'];
-    }
-    if (title.includes('dragon')) {
-      return ['Dragons', 'Magic', 'Quest'];
-    }
-    return ['Mystery', 'Prison', 'Escape'];
+    return book.tags ?? [];
   }
 
   getBookRuntime(book: Book): string {

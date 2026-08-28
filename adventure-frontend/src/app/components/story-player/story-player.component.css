@@ -159,6 +159,46 @@
   font-family: Georgia, 'Times New Roman', serif;
 }
 
+.consequence-box {
+  margin-top: 14px;
+  padding: 12px;
+  border-radius: 8px;
+  background: rgba(255,255,255,0.06);
+  border: 1px solid #d8c9b0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.consequence-text {
+  font-weight: 600;
+}
+
+.consequence-delta {
+  font-weight: 700;
+  color: #2e7d32;
+}
+
+.consequence-delta.negative {
+  color: #b00020;
+}
+
+.header-health {
+  font-weight: 700;
+  color: #d9534f;
+}
+
+.header-controls {
+  display: flex;
+  gap: 8px;
+}
+
+.game-end-actions {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  margin-top: 10px;
+}
 @media (max-width: 680px) {
   .game-header {
     display: grid;

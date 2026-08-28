@@ -22,6 +22,8 @@ export interface Book {
   title: string;
   author: string;
   difficulty: string;
+  description?: string;
+  tags?: string[];
   sections: Section[];
 }
 

@@ -1,7 +1,9 @@
 package com.pictet.adventure.exception;
 
+import lombok.Getter;
 import org.springframework.http.HttpStatus;
 
+@Getter
 public class AdventureException extends RuntimeException {
 
     private final HttpStatus status;
@@ -24,7 +26,4 @@ public class AdventureException extends RuntimeException {
         this.status = status;
     }
 
-    public HttpStatus getStatus() {
-        return status;
-    }
 }

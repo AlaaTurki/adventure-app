@@ -1,0 +1,18 @@
+<div class="container mt-3">
+  <h2>Add Book (paste JSON)</h2>
+
+  <div *ngIf="error" class="alert alert-danger">{{ error }}</div>
+  <div *ngIf="success" class="alert alert-success">{{ success }}</div>
+
+  <div class="form-group">
+    <label for="jsonInput">Book JSON</label>
+    <textarea id="jsonInput" class="form-control" rows="14" [(ngModel)]="jsonText"></textarea>
+  </div>
+
+  <div class="mt-2">
+    <button class="btn btn-primary" (click)="submit()" [disabled]="submitting">Submit</button>
+    <a class="btn btn-link" routerLink="/">Cancel</a>
+  </div>
+
+  <p class="mt-3 text-muted">Paste the book JSON exactly as in the supplied files. The backend will validate the book and return errors if invalid.</p>
+</div>

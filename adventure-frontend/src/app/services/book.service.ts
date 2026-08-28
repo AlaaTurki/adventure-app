@@ -31,6 +31,10 @@ export class BookService {
     return this.http.get<Section>(`${this.apiUrl}/${bookId}/sections/${sectionId}`);
   }
 
+  createBook(book: any): Observable<Book> {
+    return this.http.post<Book>(this.apiUrl, book);
+  }
+
   startGame(bookId: number): Observable<any> {
     return this.http.post<any>(`${this.gameApiUrl}/start`, null, { params: { bookId: String(bookId) } });
   }

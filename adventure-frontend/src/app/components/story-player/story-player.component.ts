@@ -16,6 +16,12 @@ export class StoryPlayerComponent implements OnInit {
   loading = false;
   error: string | null = null;
 
+  // consequence feedback
+  consequenceText: string | null = null;
+  consequenceDelta: number | null = null;
+  showConsequence = false;
+  disablingChoices = false;
+
   constructor(
     private bookService: BookService,
     private gameStateService: GameStateService,
@@ -94,18 +100,48 @@ export class StoryPlayerComponent implements OnInit {
       return;
     }
 
-    this.loading = true;
-    this.bookService.chooseOption(this.gameState.gameId, optionIndex).subscribe({
-      next: (game) => {
-        this.gameStateService.setGameState(game, this.book?.title);
-        this.loadSection(game.currentSectionId);
-        this.loading = false;
-      },
-      error: () => {
-        this.error = 'Could not continue this adventure.';
+  // capture consequence locally for immediate feedback
+  const consequence = choice.consequence;
+  this.consequenceText = consequence?.text ?? null;
+  this.consequenceDelta = consequence && consequence.value ? Number(consequence.value) : null;
+  this.showConsequence = false;
+  this.disablingChoices = true;
+  this.loading = true;
+
+  this.bookService.chooseOption(this.gameState.gameId, optionIndex).subscribe({
+    next: (game) => {
+      // update shared state from server
+      this.gameStateService.setGameState(game, this.book?.title);
+
+      // show consequence feedback briefly
+      if (this.consequenceText || this.consequenceDelta !== null) {
+        this.showConsequence = true;
+        // reflect server health if provided
+        this.consequenceDelta = this.consequenceDelta ?? 0;
+        // small timeout to let user see feedback before loading next section
+        setTimeout(() => {
+          this.showConsequence = false;
+          this.disablingChoices = false;
+          // navigate to the returned section
+          if (game?.currentSectionId) {
+            this.loadSection(game.currentSectionId);
+          }
+          this.loading = false;
+        }, 700);
+      } else {
+        this.disablingChoices = false;
+        if (game?.currentSectionId) {
+          this.loadSection(game.currentSectionId);
+        }
         this.loading = false;
       }
-    });
+    },
+    error: () => {
+      this.error = 'Could not continue this adventure.';
+      this.loading = false;
+      this.disablingChoices = false;
+    }
+  });
   }
 
   saveProgress(): void {
@@ -122,8 +158,24 @@ export class StoryPlayerComponent implements OnInit {
     this.router.navigate(['/']);
   }
 
+  playAgain(): void {
+    if (!this.book) return;
+    this.loading = true;
+    this.bookService.startGame(this.book.id!).subscribe({
+      next: (game) => {
+        this.gameStateService.setGameState(game, this.book?.title);
+        this.loadSection(game.currentSectionId);
+        this.loading = false;
+      },
+      error: () => {
+        this.error = 'Failed to start the adventure.';
+        this.loading = false;
+      }
+    });
+  }
+
   isGameOver(): boolean {
-    return this.gameState?.health === 0 || this.gameState?.status === 'DEAD';
+    return this.gameState?.health === 0 || this.gameState?.status === 'DEAD' || this.gameState?.status === 'WON';
   }
 
   isSectionEnd(): boolean {
