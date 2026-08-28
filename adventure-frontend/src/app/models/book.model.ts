@@ -26,9 +26,13 @@ export interface Book {
 }
 
 export interface GameState {
+  gameId?: string;
   currentBookId: number;
   currentSectionId: number;
   health: number;
   maxHealth: number;
   choices: number[];
+  bookTitle?: string;
+  status?: string;
+  isPaused?: boolean;
 }

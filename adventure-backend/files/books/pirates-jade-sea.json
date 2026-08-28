@@ -234,8 +234,14 @@
     },
     {
       "id": 666,
-      "text": "An unreachable whirlpool drags you into darkness. You shouldn't be here.",
-      "type": "NODE"
+      "text": "The whirlpool opens into a hidden channel, and you are dragged into a narrow passage of foam and lantern light.",
+      "type": "NODE",
+      "options": [
+        {
+          "description": "Swim back to the ship and regroup",
+          "gotoId": 300
+        }
+      ]
     }
   ]
 }

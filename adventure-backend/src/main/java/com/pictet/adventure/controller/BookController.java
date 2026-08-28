@@ -18,8 +18,10 @@ public class BookController {
     private BookService bookService;
     
     @GetMapping
-    public ResponseEntity<List<BookDTO>> getAllBooks() {
-        return ResponseEntity.ok(bookService.getAllBooks());
+    public ResponseEntity<List<BookDTO>> getAllBooks(
+            @RequestParam(required = false) String search,
+            @RequestParam(required = false) String difficulty) {
+        return ResponseEntity.ok(bookService.getAllBooks(search, difficulty));
     }
     
     @GetMapping("/{id}")

@@ -3,6 +3,7 @@ package com.pictet.adventure.util;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.pictet.adventure.dto.BookDTO;
+import com.pictet.adventure.exception.AdventureException;
 import com.pictet.adventure.repository.BookRepository;
 import com.pictet.adventure.service.BookService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -82,6 +83,8 @@ public class DataLoader implements CommandLineRunner {
                     loaded++;
                     fileLoaded = true;
                     break;
+                } catch (AdventureException e) {
+                    System.err.println("Skipping invalid book file " + p + ": " + e.getMessage());
                 } catch (Exception e) {
                     System.err.println("Skipping invalid file " + p + ": " + e.getMessage());
                 }

@@ -11,12 +11,13 @@ public class GlobalExceptionHandler {
     
     @ExceptionHandler(AdventureException.class)
     public ResponseEntity<?> handleAdventureException(AdventureException ex, WebRequest request) {
+        HttpStatus status = ex.getStatus() != null ? ex.getStatus() : HttpStatus.BAD_REQUEST;
         ErrorResponse errorResponse = new ErrorResponse(
-            HttpStatus.NOT_FOUND.value(),
+            status.value(),
             ex.getMessage(),
             request.getDescription(false)
         );
-        return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(errorResponse, status);
     }
     
     @ExceptionHandler(Exception.class)

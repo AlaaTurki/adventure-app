@@ -68,8 +68,14 @@
     },
     {
       "id": "666",
-      "text": "Some unreachable node",
-      "type": "NODE"
+      "text": "The corridor turns into a dead end, but you hear the jailer moving nearby.",
+      "type": "NODE",
+      "options": [
+        {
+          "description": "Run back to the cell and regroup",
+          "gotoId": 1
+        }
+      ]
     }
   ]
 }

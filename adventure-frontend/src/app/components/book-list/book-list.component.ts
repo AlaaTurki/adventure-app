@@ -31,7 +31,8 @@ export class BookListComponent implements OnInit {
   loadBooks(): void {
     this.loading = true;
     this.error = null;
-    this.bookService.getAllBooks().subscribe({
+    const difficultyFilter = this.getDifficultyFilterValue();
+    this.bookService.getAllBooks(this.searchTerm, difficultyFilter ?? undefined).subscribe({
       next: (data) => {
         this.books = data;
         this.applyFilters();
@@ -65,6 +66,14 @@ export class BookListComponent implements OnInit {
 
       return matchesQuery && matchesFilter;
     });
+  }
+
+  private getDifficultyFilterValue(): string | null {
+    if (this.activeFilter === 'All') return null;
+    if (this.activeFilter === 'Easy') return 'EASY';
+    if (this.activeFilter === 'Medium') return 'MEDIUM';
+    if (this.activeFilter === 'Hard') return 'HARD';
+    return null;
   }
 
   onSearch(): void {

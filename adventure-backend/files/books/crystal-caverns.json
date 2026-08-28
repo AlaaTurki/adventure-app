@@ -166,7 +166,7 @@
         },
         {
           "description": "Investigate the movement",
-          "gotoId": 666
+          "gotoId": 600
         }
       ]
     },
@@ -177,8 +177,14 @@
     },
     {
       "id": 666,
-      "text": "An unreachable dead end. You shouldn't be here.",
-      "type": "NODE"
+      "text": "A hidden current pulls you toward a side chamber, but the path closes behind you.",
+      "type": "NODE",
+      "options": [
+        {
+          "description": "Turn back toward the boat and regroup",
+          "gotoId": 900
+        }
+      ]
     }
   ]
 }

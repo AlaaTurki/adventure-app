@@ -6,42 +6,104 @@ import { GameState } from '../models/book.model';
   providedIn: 'root'
 })
 export class GameStateService {
-  private gameState = new BehaviorSubject<GameState>({
+  private readonly storageKey = 'adventure-game-state';
+
+  private readonly initialState: GameState = {
     currentBookId: 0,
     currentSectionId: 1,
-    health: 100,
-    maxHealth: 100,
-    choices: []
-  });
+    health: 10,
+    maxHealth: 10,
+    choices: [],
+    status: 'PLAYING',
+    isPaused: false
+  };
+
+  private gameState = new BehaviorSubject<GameState>(this.loadState());
 
   public gameState$ = this.gameState.asObservable();
 
   constructor() { }
 
-  startGame(bookId: number): void {
-    const state = this.gameState.value;
-    state.currentBookId = bookId;
-    state.currentSectionId = 1;
-    state.health = 100;
-    state.maxHealth = 100;
-    state.choices = [];
-    this.gameState.next(state);
+  startGame(bookId: number, bookTitle?: string): void {
+    const nextState: GameState = {
+      ...this.initialState,
+      currentBookId: bookId,
+      currentSectionId: 1,
+      health: 10,
+      maxHealth: 10,
+      bookTitle,
+      choices: [],
+      status: 'PLAYING',
+      isPaused: false
+    };
+    this.gameState.next(nextState);
+    this.persist();
+  }
+
+  setGameState(game: any, bookTitle?: string): void {
+    const nextState: GameState = {
+      gameId: game?.id,
+      currentBookId: game?.bookId ?? this.gameState.value.currentBookId,
+      currentSectionId: game?.currentSectionId ?? this.gameState.value.currentSectionId,
+      health: game?.health ?? 10,
+      maxHealth: Math.max(10, game?.health ?? 10),
+      choices: this.gameState.value.choices,
+      bookTitle: bookTitle ?? this.gameState.value.bookTitle,
+      status: game?.status ?? this.gameState.value.status,
+      isPaused: false
+    };
+    this.gameState.next(nextState);
+    this.persist();
   }
 
   goToSection(sectionId: number): void {
     const state = this.gameState.value;
     state.currentSectionId = sectionId;
-    state.choices.push(sectionId);
-    this.gameState.next(state);
+    state.choices = [...state.choices, sectionId];
+    this.gameState.next({ ...state });
+    this.persist();
   }
 
   updateHealth(amount: number): void {
     const state = this.gameState.value;
-    state.health = Math.max(0, Math.min(state.maxHealth, state.health + amount));
-    this.gameState.next(state);
+    state.health = Math.max(0, state.health + amount);
+    this.gameState.next({ ...state });
+    this.persist();
+  }
+
+  pauseGame(): void {
+    const state = this.gameState.value;
+    state.isPaused = true;
+    this.gameState.next({ ...state });
+    this.persist();
+  }
+
+  saveProgress(): void {
+    this.persist();
   }
 
   getCurrentGameState(): GameState {
     return this.gameState.value;
+  }
+
+  private persist(): void {
+    localStorage.setItem(this.storageKey, JSON.stringify(this.gameState.value));
+  }
+
+  private loadState(): GameState {
+    try {
+      const saved = localStorage.getItem(this.storageKey);
+      if (!saved) {
+        return { ...this.initialState };
+      }
+      const parsed = JSON.parse(saved) as GameState;
+      return {
+        ...this.initialState,
+        ...parsed,
+        choices: parsed.choices ?? []
+      };
+    } catch {
+      return { ...this.initialState };
+    }
   }
 }

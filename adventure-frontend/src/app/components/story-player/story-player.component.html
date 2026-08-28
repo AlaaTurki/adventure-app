@@ -1,8 +1,10 @@
 <div class="game-page">
   <div class="game-header">
     <button type="button" class="header-link" (click)="goBack()">← Back to Library</button>
-    <div class="header-book-title">{{ book?.title }}</div>
-    <button type="button" class="save-button">Save Progress</button>
+    <div class="header-book-title">{{ book?.title || gameState?.bookTitle }}</div>
+    <div class="header-health">Life: {{ gameState?.health ?? 10 }}</div>
+    <button type="button" class="header-link" (click)="pauseGame()">Pause</button>
+    <button type="button" class="save-button" (click)="saveProgress()">Save Progress</button>
   </div>
 
   <div class="story-card">
@@ -24,7 +26,7 @@
             *ngFor="let choice of currentSection.options; let i = index"
             type="button"
             class="choice-item"
-            (click)="selectChoice(choice.gotoId, choice.consequence?.value)"
+            (click)="selectChoice(choice)"
           >
             <span class="choice-number">{{ i + 1 }}</span>
             <span class="choice-copy">
