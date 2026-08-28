@@ -1,98 +1,306 @@
-# Adventure Backend
 
-The backend is the data and logic layer of the adventure application. It is built with Java and Spring Boot and exposes a REST API for the frontend. The service is responsible for delivering adventure books, story sections, and decision paths to the client application.
+# Adventure App — Backend
 
-## Overview
+The `adventure-backend` module is the backend REST API of the Adventure App.
 
-This service loads a collection of adventure stories from JSON files and stores them in an in-memory H2 database. At startup, the application scans the configured story folders, reads the files, and inserts the content into the database so the API can serve it dynamically.
+It is implemented using **Java, Spring Boot, and Maven** and is responsible for the application's business logic, adventure-book management, validation, game navigation, consequences, and player health.
 
-The backend follows a clean layered architecture with clear responsibility boundaries:
+## Technologies
 
-- Controller: handles HTTP requests and responses
-- Service: contains application logic and orchestration
-- Repository: manages persistence through Spring Data JPA
-- Model: defines the domain entities
-- Exception: centralizes error handling
-- Util: contains startup and data-loading logic
+* Java
+* Spring Boot
+* Maven
+* REST API
+* Jackson
+* JSON
+* JUnit
 
-This structure makes the project easier to maintain, test, and explain during an interview.
+## Responsibilities
 
-## Technology stack
+The backend is responsible for:
 
-- Java 21
-- Spring Boot 4
-- Spring Web
-- Spring Data JPA
-- H2 Database
-- Maven
+* Loading adventure books
+* Deserializing JSON book files
+* Validating adventure books
+* Providing book APIs
+* Searching and filtering books
+* Starting games
+* Managing game state
+* Navigating between sections
+* Applying health consequences
+* Detecting winning and losing states
 
-## Prerequisites
+## Book Model
 
-- Java 21+
-- Maven or Maven wrapper
+An adventure book contains:
 
-## Quick start
-
-```bash
-cd adventure-backend
-./mvnw.cmd clean install
-./mvnw.cmd spring-boot:run
+```text
+Book
+├── id
+├── title
+├── author
+├── difficulty
+└── sections
 ```
 
-Application URLs:
-- API base: http://localhost:8080/api
-- H2 console: http://localhost:8080/api/h2-console/
+Each section contains:
 
-## Project structure
+```text
+Section
+├── id
+├── text
+├── type
+└── options
+```
 
-- src/main/java/com/pictet/adventure/
-  - AdventureBackendApplication.java
-  - config/
-  - controller/
-  - dto/
-  - exception/
-  - model/
-  - repository/
-  - service/
-  - util/
+An option contains:
 
-Story data is loaded from:
-- `files/books/`
+```text
+Option
+├── description
+├── gotoId
+└── consequence
+```
+
+A consequence can modify the player's health.
+
+## Supported Section Types
+
+The application supports the following section types:
+
+```text
+BEGIN
+NODE
+END
+```
+
+`BEGIN` identifies the starting point of an adventure.
+
+`NODE` represents an intermediate section.
+
+`END` represents the end of an adventure.
+
+## Book Validation
+
+Books are validated before being used.
+
+The validation rules are:
+
+### Exactly one BEGIN
+
+```text
+BEGIN count == 1
+```
+
+A book with zero or multiple `BEGIN` sections is invalid.
+
+### At least one END
+
+```text
+END count >= 1
+```
+
+A book must have at least one ending.
+
+### Valid navigation
+
+Every option must reference an existing section:
+
+```text
+gotoId → existing section
+```
+
+### Options on non-ending sections
+
+Every section that is not an `END` must contain at least one option.
+
+## Game Logic
+
+A new game starts with:
+
+```text
+health = 10
+status = PLAYING
+```
+
+The current section is initialized with the book's `BEGIN` section.
+
+When the player selects an option:
+
+```text
+Player choice
+      ↓
+Find selected option
+      ↓
+Apply consequence
+      ↓
+Update health
+      ↓
+Navigate using gotoId
+      ↓
+Check game status
+```
+
+## Health Consequences
+
+The JSON format supports health consequences such as:
+
+```json
+{
+  "type": "HEALTH",
+  "value": "-10",
+  "text": "The alarm sounds as you run."
+}
+```
+
+Positive values increase health:
+
+```text
++5
++10
+```
+
+Negative values decrease health:
+
+```text
+-5
+-10
+-15
+```
+
+Health is prevented from becoming negative.
+
+If:
+
+```text
+health == 0
+```
+
+the game status becomes:
+
+```text
+DEAD
+```
+
+If the player reaches an `END` section, the game status becomes:
+
+```text
+WON
+```
 
 ## API
 
+The backend exposes REST endpoints for books and gameplay.
+
+Typical operations include:
+
 ```text
-GET /api/books
-GET /api/books/{id}
-GET /api/books/title/{title}
-GET /api/books/{bookId}/sections/{sectionId}
-POST /api/books
+GET  /api/books
+GET  /api/books/{id}
+
+POST /api/games
+GET  /api/games/{gameId}
+POST /api/games/{gameId}/choices
 ```
 
-## Data loading
+The exact endpoints should be considered together with the controller implementation.
 
-At startup, the app reads the adventure book JSON files and persists them in the H2 database. This approach makes the content easy to update without changing Java code, and it allows the application to behave like a real data-driven product.
+## Project Structure
 
-## Troubleshooting
+The backend follows a layered architecture:
 
-- If the app does not start, verify Java is installed: `java -version`
-- If the port is busy, ensure nothing else is listening on 8080
-- If books do not load, check the `files/books` directory for valid JSON files
-- If the IDE shows red classes, refresh or reimport the Maven project and run:
+```text
+src/main/java/com/pictet/adventure/
+
+├── controller/
+│   ├── BookController
+│   └── GameController
+│
+├── service/
+│   ├── BookService
+│   ├── BookValidationService
+│   └── GameService
+│
+├── model/
+│   ├── Book
+│   ├── Section
+│   ├── Option
+│   ├── Consequence
+│   └── Game
+│
+├── repository/
+│
+├── dto/
+│
+├── exception/
+│
+└── AdventureApplication
+```
+
+The exact package structure may evolve as the implementation progresses.
+
+## Running the Backend
+
+From the backend directory:
+
+### Linux / macOS
 
 ```bash
-./mvnw.cmd clean compile
+./mvnw spring-boot:run
 ```
 
-- If the port is blocked, run:
+### Windows
 
-```cmd
-netstat -ano | findstr :8090
-taskkill /PID <PID_NUMBER> /F
+```powershell
+.\mvnw.cmd spring-boot:run
 ```
 
-- If the port is 8080 instead of 8090, use the corresponding PID and port in the same command.
+## Build
 
-## Why this backend matters
+```bash
+./mvnw clean package
+```
 
-This backend acts as the core of the product: it owns the story data, manages the persistence layer, and exposes APIs that the frontend consumes. In an interview, this is a strong example of how a backend can be designed to support a rich interactive experience while staying organized and scalable.
+Windows:
+
+```powershell
+.\mvnw.cmd clean package
+```
+
+## Tests
+
+Run the test suite with:
+
+```bash
+./mvnw test
+```
+
+Windows:
+
+```powershell
+.\mvnw.cmd test
+```
+
+## Configuration
+
+Application-specific configuration is located under:
+
+```text
+src/main/resources/
+```
+
+Adventure book JSON files are stored in the resources area and loaded by the backend.
+
+## Design Principles
+
+The backend aims to maintain:
+
+* Separation of concerns
+* Small and focused services
+* Business logic inside the service layer
+* REST controllers focused on HTTP concerns
+* Explicit validation
+* Testable game logic
+* Clear domain models
+
+The main goal is to keep the adventure rules independent from the HTTP layer so that the core game logic can be tested independently.

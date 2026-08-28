@@ -1,3 +1,217 @@
+# Adventure App
+
+**Adventure App** is a full-stack interactive adventure book application developed as part of a technical assessment.
+
+The application combines a **Spring Boot REST API** backend with an **Angular** frontend to provide an interactive adventure-book experience. Users can browse available books, search and filter the library, start an adventure, make choices, and progress through different story sections.
+
+Players begin each adventure with **10 health points**. Depending on their choices, consequences can modify their health. The adventure ends when the player reaches an ending section or their health reaches zero.
+
+## Project Structure
+
+```text
+adventure-app/
+│
+├── adventure-backend/
+│   ├── src/
+│   ├── pom.xml
+│   └── README.md
+│
+├── adventure-frontend/
+│   ├── src/
+│   ├── package.json
+│   └── README.md
+│
+├── .gitignore
+└── README.md
+```
+
+## Architecture
+
+```text
+┌─────────────────────────────┐
+│       Angular Frontend      │
+│                             │
+│  Book Library               │
+│  Search & Filter            │
+│  Game Interface             │
+│  Health & Choices           │
+└──────────────┬──────────────┘
+               │ HTTP / REST
+               ▼
+┌─────────────────────────────┐
+│      Spring Boot API        │
+│                             │
+│  Book Management            │
+│  Book Validation            │
+│  Game Management            │
+│  Navigation                 │
+│  Consequences               │
+│  Health Management          │
+└──────────────┬──────────────┘
+               │
+               ▼
+┌─────────────────────────────┐
+│      Adventure Books        │
+│          JSON Data          │
+└─────────────────────────────┘
+```
+
+## Main Features
+
+### Book Library
+
+* Display available adventure books
+* Search books
+* Filter books by difficulty
+* Display book information such as title, author, and difficulty
+
+### Interactive Gameplay
+
+* Start a new adventure
+* Start from the book's `BEGIN` section
+* Display the current section
+* Display available choices
+* Navigate to the selected section
+* Detect ending sections
+
+### Health & Consequences
+
+Each player starts with:
+
+```text
+10 health points
+```
+
+Choices may contain health consequences such as:
+
+```json
+{
+  "type": "HEALTH",
+  "value": "-5",
+  "text": "You are injured."
+}
+```
+
+or:
+
+```json
+{
+  "type": "HEALTH",
+  "value": "+5",
+  "text": "You feel stronger."
+}
+```
+
+When the player's health reaches zero, the adventure ends.
+
+## Book Validation
+
+Books are validated before they can be used by the application.
+
+According to the assessment requirements, a book is invalid when:
+
+* It has no `BEGIN` section
+* It has more than one `BEGIN` section
+* It has no `END` section
+* An option references a non-existing section
+* A non-ending section has no options
+
+Multiple `END` sections are allowed.
+
+## Technologies
+
+### Backend
+
+* Java
+* Spring Boot
+* Maven
+* REST API
+* Jackson
+* JSON
+
+### Frontend
+
+* Angular
+* TypeScript
+* HTML
+* CSS
+* Bootstrap
+
+## Running the Application
+
+### 1. Start the backend
+
+```bash
+cd adventure-backend
+./mvnw spring-boot:run
+```
+
+On Windows:
+
+```powershell
+cd adventure-backend
+.\mvnw.cmd spring-boot:run
+```
+
+### 2. Start the frontend
+
+Open another terminal:
+
+```bash
+cd adventure-frontend
+npm install
+ng serve
+```
+
+The Angular application will normally be available at:
+
+```text
+http://localhost:4200
+```
+
+The backend runs on the configured Spring Boot port.
+
+## Testing
+
+Backend tests can be executed with:
+
+```bash
+cd adventure-backend
+./mvnw test
+```
+
+On Windows:
+
+```powershell
+.\mvnw.cmd test
+```
+
+## Assessment Objectives
+
+The implementation follows the objectives in the requested order:
+
+1. **Home page** — book library, search, and filtering
+2. **Basic gameplay** — start an adventure and navigate between sections
+3. **Consequences** — health management and game completion
+4. **Save progression** — additional objective
+5. **Add new books** — additional objective
+
+The project prioritizes the core objectives before the optional features.
+
+## Design Approach
+
+The project separates responsibilities between the frontend and backend.
+
+The backend contains the business rules and game logic, while the Angular application focuses on presentation and user interaction.
+
+This separation makes the application easier to test, maintain, and extend.
+
+## Author
+
+**Alaa Turki**
+
+Senior Full-Stack Develop
+
 # Adventure Book Full Stack
 
 This project is a full-stack choose-your-own-adventure application built with Spring Boot on the backend and Angular on the frontend. The application presents a collection of interactive adventure books, each composed of branching sections, choices, and consequences. The user can browse available stories, open a selected book, and move through the narrative by choosing different paths.

@@ -61,8 +61,8 @@ public class BookValidationService {
                 endCount++;
             }
 
-            if (type != null && type.equalsIgnoreCase("NODE") && (section.getOptions() == null || section.getOptions().isEmpty())) {
-                throw new AdventureException("Invalid book: NODE section without options at section " + section.getId(), HttpStatus.BAD_REQUEST);
+            if (!"END".equalsIgnoreCase(type) && (section.getOptions() == null || section.getOptions().isEmpty())) {
+                throw new AdventureException("Invalid book: non-END section without options at section " + section.getId(), HttpStatus.BAD_REQUEST);
             }
 
             if (section.getOptions() != null) {
