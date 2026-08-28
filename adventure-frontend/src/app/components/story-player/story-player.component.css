@@ -1,0 +1,172 @@
+.game-page {
+  min-height: 100vh;
+  background: #efeee9;
+  padding: 26px 20px 46px;
+}
+
+.game-header {
+  max-width: 980px;
+  margin: 0 auto 18px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  color: #433a35;
+  font-size: 0.95rem;
+}
+
+.header-link,
+.save-button,
+.primary-button {
+  background: rgba(255,255,255,0.35);
+  border: 1px solid #d0c3b3;
+  border-radius: 8px;
+  color: #433a35;
+  padding: 9px 12px;
+  cursor: pointer;
+}
+
+.header-book-title {
+  flex: 1;
+  text-align: center;
+  font-weight: 700;
+  color: #352d29;
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: 1.1rem;
+}
+
+.story-card {
+  max-width: 980px;
+  margin: 0 auto;
+  background: rgba(255,255,255,0.18);
+  border: 1px solid #d1c3af;
+  border-radius: 14px;
+  box-shadow: 0 6px 18px rgba(54, 40, 32, 0.08);
+  padding: 18px 18px 12px;
+}
+
+.story-body {
+  background: rgba(255,255,255,0.12);
+  border: 1px solid #d9cab4;
+  border-radius: 12px;
+  padding: 18px 20px 14px;
+}
+
+.story-body h1 {
+  margin: 0 0 12px;
+  font-size: clamp(2rem, 3vw, 3rem);
+  text-align: center;
+  color: #2e241f;
+  font-family: Georgia, 'Times New Roman', serif;
+}
+
+.story-text {
+  margin-top: 8px;
+  color: #443a35;
+  font-size: 1.2rem;
+  line-height: 1.7;
+}
+
+.story-text p {
+  margin: 0 0 18px;
+}
+
+.decision-block {
+  margin-top: 16px;
+}
+
+.decision-block h2 {
+  margin: 0 0 14px;
+  font-size: 1.9rem;
+  color: #2d241f;
+  font-family: Georgia, 'Times New Roman', serif;
+}
+
+.choices-list {
+  display: grid;
+  gap: 14px;
+}
+
+.choice-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  width: 100%;
+  background: rgba(255,255,255,0.06);
+  border: 1px solid #d3c4ab;
+  border-radius: 12px;
+  padding: 14px 16px;
+  text-align: left;
+  color: #2c2321;
+  cursor: pointer;
+  transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.choice-item:hover {
+  background: rgba(203, 176, 105, 0.12);
+  transform: translateY(-1px);
+}
+
+.choice-number {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: #8a6d4a;
+  color: #fff;
+  font-weight: 700;
+  font-size: 0.9rem;
+  flex-shrink: 0;
+}
+
+.choice-copy {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex: 1;
+}
+
+.choice-label {
+  font-size: 1.05rem;
+  line-height: 1.45;
+}
+
+.choice-note {
+  color: #655650;
+  font-size: 0.9rem;
+  font-style: italic;
+}
+
+.loading-box,
+.error-box,
+.game-over-panel {
+  border: 1px solid #d2c1a8;
+  border-radius: 12px;
+  padding: 18px 20px;
+  background: rgba(255,255,255,0.14);
+  color: #3c312d;
+}
+
+.game-over-panel {
+  text-align: center;
+}
+
+.game-over-panel h3 {
+  margin: 0 0 8px;
+  font-size: 2rem;
+  font-family: Georgia, 'Times New Roman', serif;
+}
+
+@media (max-width: 680px) {
+  .game-header {
+    display: grid;
+    grid-template-columns: 1fr;
+    text-align: center;
+  }
+
+  .header-book-title {
+    order: -1;
+  }
+}

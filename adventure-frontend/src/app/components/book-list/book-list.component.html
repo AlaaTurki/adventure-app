@@ -1,0 +1,81 @@
+<div class="page-shell">
+  <header class="hero-panel">
+    <div class="hero-inner">
+      <h1><span class="star">✦</span> Adventure Awaits <span class="star">✦</span></h1>
+      <p>
+        Embark on epic quests where every choice shapes your destiny. Explore mystical
+        realms, solve ancient mysteries, and become the hero of your own story.
+      </p>
+      <div class="availability-box">
+        <span class="book-icon">📖</span>
+        <span>4 Epic Adventures Available</span>
+      </div>
+    </div>
+  </header>
+
+  <main class="library-panel">
+    <h2>The Adventure Library</h2>
+    <p class="lead-text">
+      Choose your next adventure from our collection of interactive tales. Each book offers
+      unique paths and multiple endings based on your choices.
+    </p>
+
+    <div class="search-wrap">
+      <span class="search-icon">⌕</span>
+      <input
+        type="text"
+        [(ngModel)]="searchTerm"
+        (input)="onSearch()"
+        placeholder="Search adventures..."
+      />
+    </div>
+
+    <div class="filter-row">
+      <span class="filter-label">Filters:</span>
+      <button
+        *ngFor="let filter of filters"
+        type="button"
+        class="filter-chip"
+        [class.active]="activeFilter === filter"
+        (click)="setFilter(filter)"
+      >
+        {{ filter }}
+      </button>
+    </div>
+
+    <div *ngIf="loading" class="loading-state">
+      Loading books...
+    </div>
+
+    <div *ngIf="error" class="error-state">
+      {{ error }}
+      <button type="button" class="retry-button" (click)="loadBooks()">Retry</button>
+    </div>
+
+    <div *ngIf="!loading && !error" class="card-grid">
+      <article *ngFor="let book of filteredBooks" class="book-card">
+        <h3>{{ book.title }}</h3>
+        <p class="author">by {{ book.author }}</p>
+
+        <p class="summary">{{ getBookDescription(book) }}</p>
+
+        <div class="meta-row">
+          <span class="difficulty-badge" [class.easy]="book.difficulty === 'EASY'" [class.medium]="book.difficulty === 'MEDIUM'" [class.hard]="book.difficulty === 'HARD'">
+            {{ book.difficulty }}
+          </span>
+        </div>
+
+        <div class="stats-row">
+          <span>{{ getBookRuntime(book) }}</span>
+          <span>{{ book.sections.length }} chapters</span>
+        </div>
+
+        <div class="tag-row">
+          <span *ngFor="let tag of getBookTags(book)" class="tag">{{ tag }}</span>
+        </div>
+
+        <button type="button" class="quest-button" (click)="selectBook(book)">Begin Quest</button>
+      </article>
+    </div>
+  </main>
+</div>

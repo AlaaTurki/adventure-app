@@ -1,0 +1,22 @@
+# Java / Maven
+/target/
+.mvn/
+!.mvn/wrapper/maven-wrapper.jar
+
+# IDEs
+.idea/
+.vscode/
+*.iml
+*.ipr
+*.iws
+*.classpath
+*.project
+*.factorypath
+.settings/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Spring Boot / local runtime
+*.log

@@ -1,0 +1,45 @@
+<div class="game-page">
+  <div class="game-header">
+    <button type="button" class="header-link" (click)="goBack()">← Back to Library</button>
+    <div class="header-book-title">{{ book?.title }}</div>
+    <button type="button" class="save-button">Save Progress</button>
+  </div>
+
+  <div class="story-card">
+    <div *ngIf="loading" class="loading-box">Loading...</div>
+    <div *ngIf="error" class="error-box">{{ error }}</div>
+
+    <div *ngIf="!loading && currentSection && !isGameOver()" class="story-body">
+      <h1>{{ currentSection.text.split('.').slice(0, 1)[0] || 'The Cave Entrance' }}</h1>
+
+      <div class="story-text">
+        <p *ngFor="let paragraph of getParagraphs(currentSection.text)">{{ paragraph }}</p>
+      </div>
+
+      <div class="decision-block">
+        <h2>What do you do?</h2>
+
+        <div *ngIf="currentSection.options && currentSection.options.length > 0" class="choices-list">
+          <button
+            *ngFor="let choice of currentSection.options; let i = index"
+            type="button"
+            class="choice-item"
+            (click)="selectChoice(choice.gotoId, choice.consequence?.value)"
+          >
+            <span class="choice-number">{{ i + 1 }}</span>
+            <span class="choice-copy">
+              <span class="choice-label">{{ choice.description }}</span>
+              <span *ngIf="choice.consequence" class="choice-note">{{ choice.consequence.text }}</span>
+            </span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="isGameOver()" class="game-over-panel">
+      <h3>Game Over</h3>
+      <p>Your health reached zero.</p>
+      <button type="button" class="primary-button" (click)="goBack()">Back to Book Selection</button>
+    </div>
+  </div>
+</div>

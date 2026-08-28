@@ -1,0 +1,22 @@
+# Root-level generated and local files
+**/node_modules/
+**/dist/
+**/.angular/
+**/target/
+**/coverage/
+**/.idea/
+**/.vscode/
+**/*.iml
+**/*.ipr
+**/*.iws
+**/.classpath
+**/.project
+**/.factorypath
+**/.settings/
+**/.springBeans
+**/.DS_Store
+**/Thumbs.db
+**/.env
+**/.env.*
+**/.mvn/wrapper/maven-wrapper.jar
+**/*.log
