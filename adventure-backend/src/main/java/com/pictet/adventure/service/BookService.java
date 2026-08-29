@@ -8,7 +8,6 @@ import com.pictet.adventure.model.Section;
 import com.pictet.adventure.repository.BookRepository;
 import com.pictet.adventure.repository.SectionRepository;
 import com.pictet.adventure.util.BookMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -19,17 +18,17 @@ import java.util.stream.Collectors;
 @Service
 public class BookService {
     
-    @Autowired
-    private BookRepository bookRepository;
-    
-    @Autowired
-    private SectionRepository sectionRepository;
-    
-    @Autowired
-    private BookMapper bookMapper;
+    private final BookRepository bookRepository;
+    private final SectionRepository sectionRepository;
+    private final BookMapper bookMapper;
+    private final BookValidationService bookValidationService;
 
-    @Autowired
-    private BookValidationService bookValidationService;
+    public BookService(BookRepository bookRepository, SectionRepository sectionRepository, BookMapper bookMapper, BookValidationService bookValidationService) {
+        this.bookRepository = bookRepository;
+        this.sectionRepository = sectionRepository;
+        this.bookMapper = bookMapper;
+        this.bookValidationService = bookValidationService;
+    }
     
     public List<BookDTO> getAllBooks() {
         return getAllBooks(null, null);

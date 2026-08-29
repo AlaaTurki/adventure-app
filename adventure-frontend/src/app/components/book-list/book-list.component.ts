@@ -86,7 +86,7 @@ export class BookListComponent implements OnInit {
 
   selectBook(book: Book): void {
     if (book.id) {
-      this.gameStateService.startGame(book.id);
+      // backend is authoritative; StoryPlayer will start the game when it loads the book
       this.router.navigate(['/play', book.id]);
     }
   }

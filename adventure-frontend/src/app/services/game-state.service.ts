@@ -12,7 +12,6 @@ export class GameStateService {
     currentBookId: 0,
     currentSectionId: 1,
     health: 10,
-    maxHealth: 10,
     choices: [],
     status: 'PLAYING',
     isPaused: false
@@ -24,21 +23,7 @@ export class GameStateService {
 
   constructor() { }
 
-  startGame(bookId: number, bookTitle?: string): void {
-    const nextState: GameState = {
-      ...this.initialState,
-      currentBookId: bookId,
-      currentSectionId: 1,
-      health: 10,
-      maxHealth: 10,
-      bookTitle,
-      choices: [],
-      status: 'PLAYING',
-      isPaused: false
-    };
-    this.gameState.next(nextState);
-    this.persist();
-  }
+  // remove local start/goToSection/updateHealth; server is authoritative
 
   setGameState(game: any, bookTitle?: string): void {
     const nextState: GameState = {
@@ -46,28 +31,12 @@ export class GameStateService {
       currentBookId: game?.bookId ?? this.gameState.value.currentBookId,
       currentSectionId: game?.currentSectionId ?? this.gameState.value.currentSectionId,
       health: game?.health ?? 10,
-      maxHealth: Math.max(10, game?.health ?? 10),
       choices: this.gameState.value.choices,
       bookTitle: bookTitle ?? this.gameState.value.bookTitle,
       status: game?.status ?? this.gameState.value.status,
       isPaused: false
     };
     this.gameState.next(nextState);
-    this.persist();
-  }
-
-  goToSection(sectionId: number): void {
-    const state = this.gameState.value;
-    state.currentSectionId = sectionId;
-    state.choices = [...state.choices, sectionId];
-    this.gameState.next({ ...state });
-    this.persist();
-  }
-
-  updateHealth(amount: number): void {
-    const state = this.gameState.value;
-    state.health = Math.max(0, state.health + amount);
-    this.gameState.next({ ...state });
     this.persist();
   }
 

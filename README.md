@@ -139,6 +139,24 @@ Multiple `END` sections are allowed.
 
 ## Running the Application
 
+API endpoints (backend)
+
+- GET  /api/books
+- GET  /api/books/{id}
+- GET  /api/books?search=...&difficulty=...
+- POST /api/books
+- GET  /api/books/{bookId}/sections/{sectionId}
+
+- POST /api/games/start?bookId={bookId}   (start a new game)
+- GET  /api/games/{gameId}               (get game state)
+- POST /api/games/{gameId}/choices       (body: { "optionIndex": 0 })
+- POST /api/games/{gameId}/save          (save a snapshot)
+- GET  /api/games/saved?bookId={bookId}  (list saved snapshots)
+
+Note: book JSON files are loaded from adventure-backend/files/books at startup for the assessment materials. In production you'd use classpath resources or a managed storage location.
+
+## Running the Application
+
 ### 1. Start the backend
 
 ```bash

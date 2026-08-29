@@ -6,7 +6,6 @@ import com.pictet.adventure.dto.BookDTO;
 import com.pictet.adventure.exception.AdventureException;
 import com.pictet.adventure.repository.BookRepository;
 import com.pictet.adventure.service.BookService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
@@ -19,11 +18,13 @@ import java.util.List;
 @Component
 public class DataLoader implements CommandLineRunner {
     
-    @Autowired
-    private BookService bookService;
-    
-    @Autowired
-    private BookRepository bookRepository;
+    private final BookService bookService;
+    private final BookRepository bookRepository;
+
+    public DataLoader(BookService bookService, BookRepository bookRepository) {
+        this.bookService = bookService;
+        this.bookRepository = bookRepository;
+    }
     
     private static final String[] BOOK_FILES = {
         "crystal-caverns.json",

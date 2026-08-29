@@ -220,7 +220,8 @@ export class StoryPlayerComponent implements OnInit {
 
   getHealthBarColor(): string {
     if (!this.gameState) return 'success';
-    const percentage = (this.gameState.health / Math.max(this.gameState.maxHealth, 10)) * 100;
+    const max = 10; // spec-defined starting health
+    const percentage = (this.gameState.health / max) * 100;
     if (percentage > 60) return 'success';
     if (percentage > 30) return 'warning';
     return 'danger';

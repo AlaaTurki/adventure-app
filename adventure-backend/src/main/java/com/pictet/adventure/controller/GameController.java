@@ -3,7 +3,6 @@ package com.pictet.adventure.controller;
 import com.pictet.adventure.dto.ChoiceRequest;
 import com.pictet.adventure.dto.GameDTO;
 import com.pictet.adventure.service.GameService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -11,11 +10,13 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/games")
-@CrossOrigin(origins = "http://localhost:4200")
 public class GameController {
 
-    @Autowired
-    private GameService gameService;
+    private final GameService gameService;
+
+    public GameController(GameService gameService) {
+        this.gameService = gameService;
+    }
 
     @PostMapping("/start")
     public ResponseEntity<GameDTO> startGame(@RequestParam Long bookId) {

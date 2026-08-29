@@ -3,7 +3,6 @@ package com.pictet.adventure.controller;
 import com.pictet.adventure.dto.BookDTO;
 import com.pictet.adventure.dto.SectionDTO;
 import com.pictet.adventure.service.BookService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -11,11 +10,13 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/books")
-@CrossOrigin(origins = "http://localhost:4200")
 public class BookController {
     
-    @Autowired
-    private BookService bookService;
+    private final BookService bookService;
+
+    public BookController(BookService bookService) {
+        this.bookService = bookService;
+    }
     
     @GetMapping
     public ResponseEntity<List<BookDTO>> getAllBooks(

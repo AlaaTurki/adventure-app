@@ -32,7 +32,6 @@ export interface GameState {
   currentBookId: number;
   currentSectionId: number;
   health: number;
-  maxHealth: number;
   choices: number[];
   bookTitle?: string;
   status?: string;

@@ -13,7 +13,6 @@ import com.pictet.adventure.repository.BookRepository;
 import com.pictet.adventure.repository.GameRepository;
 import com.pictet.adventure.repository.SavedGameRepository;
 import com.pictet.adventure.model.SavedGame;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -25,17 +24,17 @@ import java.util.stream.Collectors;
 @Service
 public class GameService {
 
-    @Autowired
-    private GameRepository gameRepository;
+    private final GameRepository gameRepository;
+    private final BookRepository bookRepository;
+    private final SavedGameRepository savedGameRepository;
+    private final ObjectMapper objectMapper;
 
-    @Autowired
-    private BookRepository bookRepository;
-
-    @Autowired
-    private SavedGameRepository savedGameRepository;
-
-    @Autowired
-    private ObjectMapper objectMapper;
+    public GameService(GameRepository gameRepository, BookRepository bookRepository, SavedGameRepository savedGameRepository, ObjectMapper objectMapper) {
+        this.gameRepository = gameRepository;
+        this.bookRepository = bookRepository;
+        this.savedGameRepository = savedGameRepository;
+        this.objectMapper = objectMapper;
+    }
 
     public GameDTO startGame(Long bookId) {
         Book book = bookRepository.findById(bookId)
