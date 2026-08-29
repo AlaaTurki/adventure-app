@@ -1,0 +1,166 @@
+{
+  "info": {
+    "name": "Adventure App API Tests",
+    "description": "Postman collection for Book and Game endpoints",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8080",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "GET all books",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/books",
+          "host": ["{{baseUrl}}"],
+          "path": ["books"]
+        }
+      }
+    },
+    {
+      "name": "GET book by id",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/books/1",
+          "host": ["{{baseUrl}}"],
+          "path": ["books", "1"]
+        }
+      }
+    },
+    {
+      "name": "GET book by title",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/books/title/The%20Crystal%20Caverns",
+          "host": ["{{baseUrl}}"],
+          "path": ["books", "title", "The Crystal Caverns"]
+        }
+      }
+    },
+    {
+      "name": "GET section by book and section id",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/books/1/sections/1",
+          "host": ["{{baseUrl}}"],
+          "path": ["books", "1", "sections", "1"]
+        }
+      }
+    },
+    {
+      "name": "POST create book",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"title\": \"The Crystal Caverns\",\n  \"author\": \"Alaa\",\n  \"difficulty\": \"easy\",\n  \"sections\": [\n    {\n      \"sectionId\": 1,\n      \"type\": \"BEGIN\",\n      \"text\": \"You stand at the mouth of a crystal cave. What do you do?\",\n      \"options\": [\n        {\n          \"description\": \"Follow the crystal tunnel\",\n          \"gotoId\": 2,\n          \"consequence\": {\n            \"type\": \"HEALTH\",\n            \"value\": \"0\",\n            \"text\": \"You move carefully and keep your balance.\"\n          }\n        },\n        {\n          \"description\": \"Examine the wall carvings\",\n          \"gotoId\": 3,\n          \"consequence\": {\n            \"type\": \"GAIN_HEALTH\",\n            \"value\": \"1\",\n            \"text\": \"You find a glowing crystal shard.\"\n          }\n        }\n      ]\n    },\n    {\n      \"sectionId\": 2,\n      \"type\": \"NODE\",\n      \"text\": \"The tunnel glows brighter ahead.\",\n      \"options\": [\n        {\n          \"description\": \"Step through the lantern gate\",\n          \"gotoId\": 4,\n          \"consequence\": {\n            \"type\": \"LOSE_HEALTH\",\n            \"value\": \"-3\",\n            \"text\": \"A crystal spike grazes your arm.\"\n          }\n        }\n      ]\n    },\n    {\n      \"sectionId\": 3,\n      \"type\": \"NODE\",\n      \"text\": \"The carvings depict an ancient journey.\",\n      \"options\": [\n        {\n          \"description\": \"Follow the symbol trail\",\n          \"gotoId\": 4,\n          \"consequence\": {\n            \"type\": \"HEALTH\",\n            \"value\": \"0\",\n            \"text\": \"You feel wiser and steadier.\"\n          }\n        }\n      ]\n    },\n    {\n      \"sectionId\": 4,\n      \"type\": \"END\",\n      \"text\": \"You emerge victorious from the cavern.\",\n      \"options\": []\n    }\n  ]\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/books",
+          "host": ["{{baseUrl}}"],
+          "path": ["books"]
+        }
+      }
+    },
+    {
+      "name": "POST start game",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/games/start?bookId=1",
+          "host": ["{{baseUrl}}"],
+          "path": ["games", "start"],
+          "query": [
+            {
+              "key": "bookId",
+              "value": "1"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "GET current game",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/games/00000000-0000-0000-0000-000000000000",
+          "host": ["{{baseUrl}}"],
+          "path": ["games", "00000000-0000-0000-0000-000000000000"]
+        }
+      }
+    },
+    {
+      "name": "POST choose option",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"optionIndex\": 0\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/games/00000000-0000-0000-0000-000000000000/choices",
+          "host": ["{{baseUrl}}"],
+          "path": ["games", "00000000-0000-0000-0000-000000000000", "choices"]
+        }
+      }
+    },
+    {
+      "name": "POST save game",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/games/00000000-0000-0000-0000-000000000000/save",
+          "host": ["{{baseUrl}}"],
+          "path": ["games", "00000000-0000-0000-0000-000000000000", "save"]
+        }
+      }
+    },
+    {
+      "name": "GET saved games",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/games/saved?bookId=1",
+          "host": ["{{baseUrl}}"],
+          "path": ["games", "saved"],
+          "query": [
+            {
+              "key": "bookId",
+              "value": "1"
+            }
+          ]
+        }
+      }
+    }
+  ]
+}

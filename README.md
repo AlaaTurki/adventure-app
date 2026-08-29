@@ -155,55 +155,6 @@ API endpoints (backend)
 
 Note: book JSON files are loaded from adventure-backend/files/books at startup for the assessment materials. In production you'd use classpath resources or a managed storage location.
 
-## Running the Application
-
-### 1. Start the backend
-
-```bash
-cd adventure-backend
-./mvnw spring-boot:run
-```
-
-On Windows:
-
-```powershell
-cd adventure-backend
-.\mvnw.cmd spring-boot:run
-```
-
-### 2. Start the frontend
-
-Open another terminal:
-
-```bash
-cd adventure-frontend
-npm install
-ng serve
-```
-
-The Angular application will normally be available at:
-
-```text
-http://localhost:4200
-```
-
-The backend runs on the configured Spring Boot port.
-
-## Testing
-
-Backend tests can be executed with:
-
-```bash
-cd adventure-backend
-./mvnw test
-```
-
-On Windows:
-
-```powershell
-.\mvnw.cmd test
-```
-
 ## Assessment Objectives
 
 The implementation follows the objectives in the requested order:
@@ -228,26 +179,7 @@ This separation makes the application easier to test, maintain, and extend.
 
 **Alaa Turki**
 
-Senior Full-Stack Develop
-
-# Adventure Book Full Stack
-
-This project is a full-stack choose-your-own-adventure application built with Spring Boot on the backend and Angular on the frontend. The application presents a collection of interactive adventure books, each composed of branching sections, choices, and consequences. The user can browse available stories, open a selected book, and move through the narrative by choosing different paths.
-
-The project is designed to demonstrate a complete web application lifecycle: modeling the domain, persisting data, exposing a REST API, and building an interactive frontend experience. It is also structured to be easy to run locally and explain during a technical interview.
-
-## Repository
-
-- GitHub: https://github.com/AlaaTurki/adventure-app.git
-
-## Project overview
-
-The application is split into two main parts:
-
-- Backend: Java 21 + Spring Boot + Maven + H2 database
-- Frontend: Angular + TypeScript + Bootstrap + REST API integration
-
-The backend loads adventure content from JSON files and stores it in an in-memory database. The frontend calls the backend to retrieve the available books and the current story state, then renders the story and navigation options to the player.
+Senior Full-Stack Developer
 
 This creates a clean client-server architecture where the backend manages data and logic, while the frontend focuses on user interaction and presentation.
 
