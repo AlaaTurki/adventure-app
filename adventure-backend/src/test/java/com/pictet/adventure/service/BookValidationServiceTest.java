@@ -49,6 +49,37 @@ class BookValidationServiceTest {
     }
 
     @Test
+    void invalidBookWithMultipleBeginSectionsFails() {
+        BookDTO book = new BookDTO();
+        book.setTitle("Broken Book");
+        book.setAuthor("Author");
+        book.setDifficulty("EASY");
+        book.setSections(List.of(
+                new SectionDTO(1, "Start A", "BEGIN", List.of(new ChoiceDTO("Go", 3, null))),
+                new SectionDTO(2, "Start B", "BEGIN", List.of(new ChoiceDTO("Go", 3, null))),
+                new SectionDTO(3, "Finish", "END", List.of())
+        ));
+
+        AdventureException ex = assertThrows(AdventureException.class, () -> bookValidationService.validateBook(book));
+        assertTrue(ex.getMessage().toLowerCase().contains("begin"));
+    }
+
+    @Test
+    void invalidBookWithoutEndFails() {
+        BookDTO book = new BookDTO();
+        book.setTitle("Broken Book");
+        book.setAuthor("Author");
+        book.setDifficulty("EASY");
+        book.setSections(List.of(
+                new SectionDTO(1, "Start", "BEGIN", List.of(new ChoiceDTO("Go", 2, null))),
+                new SectionDTO(2, "Node", "NODE", List.of(new ChoiceDTO("Go", 1, null)))
+        ));
+
+        AdventureException ex = assertThrows(AdventureException.class, () -> bookValidationService.validateBook(book));
+        assertTrue(ex.getMessage().toLowerCase().contains("end"));
+    }
+
+    @Test
     void invalidBookWithMissingGotoSectionFails() {
         BookDTO book = new BookDTO();
         book.setTitle("Broken Book");
@@ -60,7 +91,7 @@ class BookValidationServiceTest {
         ));
 
         AdventureException ex = assertThrows(AdventureException.class, () -> bookValidationService.validateBook(book));
-        assertTrue(ex.getMessage().contains("gotoId") || ex.getMessage().contains("missing section"));
+        assertTrue(ex.getMessage().contains("non-existing section") || ex.getMessage().contains("missing section"));
     }
 
     @Test
@@ -75,7 +106,7 @@ class BookValidationServiceTest {
         ));
 
         AdventureException ex = assertThrows(AdventureException.class, () -> bookValidationService.validateBook(book));
-        assertTrue(ex.getMessage().toLowerCase().contains("null choice"));
+        assertTrue(ex.getMessage().toLowerCase().contains("choice cannot be null"));
     }
 
     @Test
@@ -90,7 +121,22 @@ class BookValidationServiceTest {
         ));
 
         AdventureException ex = assertThrows(AdventureException.class, () -> bookValidationService.validateBook(book));
-        assertTrue(ex.getMessage().toLowerCase().contains("gotoid") || ex.getMessage().toLowerCase().contains("destination"));
+        assertTrue(ex.getMessage().toLowerCase().contains("destination"));
+    }
+
+    @Test
+    void invalidBookWithNonEndSectionWithoutOptionsFails() {
+        BookDTO book = new BookDTO();
+        book.setTitle("Broken Book");
+        book.setAuthor("Author");
+        book.setDifficulty("EASY");
+        book.setSections(List.of(
+                new SectionDTO(1, "Start", "BEGIN", List.of()),
+                new SectionDTO(2, "Finish", "END", List.of())
+        ));
+
+        AdventureException ex = assertThrows(AdventureException.class, () -> bookValidationService.validateBook(book));
+        assertTrue(ex.getMessage().toLowerCase().contains("without options"));
     }
 }
 

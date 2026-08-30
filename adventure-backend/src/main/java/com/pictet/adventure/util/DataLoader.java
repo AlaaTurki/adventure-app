@@ -17,7 +17,7 @@ import java.util.List;
 
 @Component
 public class DataLoader implements CommandLineRunner {
-    
+
     private final BookService bookService;
     private final BookRepository bookRepository;
 
@@ -25,12 +25,12 @@ public class DataLoader implements CommandLineRunner {
         this.bookService = bookService;
         this.bookRepository = bookRepository;
     }
-    
+
     private static final String[] BOOK_FILES = {
-        "crystal-caverns.json",
-        "dragon-quest.json",
-        "pirates-jade-sea.json",
-        "the-prisoner.json"
+            "crystal-caverns.json",
+            "dragon-quest.json",
+            "pirates-jade-sea.json",
+            "the-prisoner.json"
     };
 
     private static final String[] BOOK_SEARCH_ROOTS = { "files", "fichiers" };
@@ -39,13 +39,18 @@ public class DataLoader implements CommandLineRunner {
         Path currentDir = Paths.get("").toAbsolutePath().normalize();
         List<Path> candidatePaths = new ArrayList<>();
 
-        for (String root : BOOK_SEARCH_ROOTS) {
-            candidatePaths.add(currentDir.resolve(root).resolve("books"));
-            candidatePaths.add(currentDir.resolve(root));
-            candidatePaths.add(currentDir.resolve("..").resolve(root).resolve("books"));
-            candidatePaths.add(currentDir.resolve("..").resolve(root));
-            candidatePaths.add(currentDir.resolve("..").resolve("..").resolve(root).resolve("books"));
-            candidatePaths.add(currentDir.resolve("..").resolve("..").resolve(root));
+        // Try both the current working directory and the common module directory
+        Path[] bases = new Path[] { currentDir, currentDir.resolve("adventure-backend") };
+
+        for (Path base : bases) {
+            for (String root : BOOK_SEARCH_ROOTS) {
+                candidatePaths.add(base.resolve(root).resolve("books"));
+                candidatePaths.add(base.resolve(root));
+                candidatePaths.add(base.resolve("..").resolve(root).resolve("books"));
+                candidatePaths.add(base.resolve("..").resolve(root));
+                candidatePaths.add(base.resolve("..").resolve("..").resolve(root).resolve("books"));
+                candidatePaths.add(base.resolve("..").resolve("..").resolve(root));
+            }
         }
 
         return candidatePaths;

@@ -68,15 +68,13 @@ public class BookValidationService {
             if (section.getOptions() != null) {
                 for (ChoiceDTO choice : section.getOptions()) {
                     if (choice == null) {
-                        throw new AdventureException("Invalid book: null choice in section " + section.getId(), HttpStatus.BAD_REQUEST);
+                        throw new AdventureException("Choice cannot be null", HttpStatus.BAD_REQUEST);
                     }
                     if (choice.getGotoId() == null) {
-                        throw new AdventureException("Invalid book: choice destination (gotoId) is required in section " + section.getId(), HttpStatus.BAD_REQUEST);
+                        throw new AdventureException("Choice destination is required", HttpStatus.BAD_REQUEST);
                     }
                     if (!sectionMap.containsKey(choice.getGotoId())) {
-                        throw new AdventureException(
-                                "Invalid book: section " + section.getId() + " points to missing section " + choice.getGotoId(),
-                                HttpStatus.BAD_REQUEST);
+                        throw new AdventureException("Choice points to a non-existing section", HttpStatus.BAD_REQUEST);
                     }
                 }
             }

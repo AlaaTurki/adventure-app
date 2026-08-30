@@ -15,6 +15,12 @@
   font-size: 0.95rem;
 }
 
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
 .header-link,
 .save-button,
 .primary-button {
@@ -24,6 +30,25 @@
   color: #433a35;
   padding: 9px 12px;
   cursor: pointer;
+}
+
+.health-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(255,255,255,0.35);
+  border: 1px solid #d0c3b3;
+  border-radius: 999px;
+  padding: 7px 12px;
+  color: #3d2e2a;
+  font-weight: 700;
+  font-size: 0.9rem;
+}
+
+.heart-icon {
+  color: #c85c5c;
+  font-size: 1rem;
+  line-height: 1;
 }
 
 .header-book-title {
@@ -159,46 +184,6 @@
   font-family: Georgia, 'Times New Roman', serif;
 }
 
-.consequence-box {
-  margin-top: 14px;
-  padding: 12px;
-  border-radius: 8px;
-  background: rgba(255,255,255,0.06);
-  border: 1px solid #d8c9b0;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.consequence-text {
-  font-weight: 600;
-}
-
-.consequence-delta {
-  font-weight: 700;
-  color: #2e7d32;
-}
-
-.consequence-delta.negative {
-  color: #b00020;
-}
-
-.header-health {
-  font-weight: 700;
-  color: #d9534f;
-}
-
-.header-controls {
-  display: flex;
-  gap: 8px;
-}
-
-.game-end-actions {
-  display: flex;
-  gap: 10px;
-  justify-content: center;
-  margin-top: 10px;
-}
 @media (max-width: 680px) {
   .game-header {
     display: grid;

@@ -195,12 +195,17 @@ The backend exposes REST endpoints for books and gameplay.
 Typical operations include:
 
 ```text
-GET  /api/books
-GET  /api/books/{id}
+GET  /books
+GET  /books/{id}
+GET  /books/title/{title}
+GET  /books/{bookId}/sections/{sectionId}
+POST /books
 
-POST /api/games
-GET  /api/games/{gameId}
-POST /api/games/{gameId}/choices
+POST /games/start?bookId={bookId}
+GET  /games/{gameId}
+POST /games/{gameId}/choices
+POST /games/{gameId}/save
+GET  /games/saved
 ```
 
 The exact endpoints should be considered together with the controller implementation.

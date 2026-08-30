@@ -1,11 +1,13 @@
 <div class="game-page">
   <div class="game-header">
     <button type="button" class="header-link" (click)="goBack()">← Back to Library</button>
-    <div class="header-book-title">{{ book?.title || gameState?.bookTitle }}</div>
-    <div class="header-health">❤️ {{ gameState?.health ?? 10 }}</div>
-    <div class="header-controls">
-      <button type="button" class="header-link" (click)="pauseGame()">Pause</button>
-      <button type="button" class="save-button" (click)="saveProgress()">💾 Save</button>
+    <div class="header-book-title">{{ book?.title }}</div>
+    <div class="header-actions">
+      <div class="health-pill" aria-label="Current health">
+        <span class="heart-icon">❤</span>
+        <span>{{ gameState?.health ?? 0 }}</span>
+      </div>
+      <button type="button" class="save-button">Save Progress</button>
     </div>
   </div>
 
@@ -28,8 +30,7 @@
             *ngFor="let choice of currentSection.options; let i = index"
             type="button"
             class="choice-item"
-            (click)="selectChoice(choice)"
-            [disabled]="disablingChoices || loading"
+            (click)="selectChoice(i)"
           >
             <span class="choice-number">{{ i + 1 }}</span>
             <span class="choice-copy">
@@ -39,33 +40,12 @@
           </button>
         </div>
       </div>
-
-      <div *ngIf="showConsequence" class="consequence-box">
-        <div class="consequence-text">{{ consequenceText }}</div>
-        <div class="consequence-delta" [class.negative]="consequenceDelta !== null && consequenceDelta < 0">
-          {{ consequenceDelta !== null ? (consequenceDelta > 0 ? '+' + consequenceDelta : consequenceDelta) : '' }} HP
-        </div>
-      </div>
     </div>
 
     <div *ngIf="isGameOver()" class="game-over-panel">
-      <ng-container *ngIf="gameState?.status === 'DEAD' || gameState?.health === 0">
-        <h3>💀 You Died</h3>
-        <p>Your health reached zero.</p>
-        <div class="game-end-actions">
-          <button type="button" class="primary-button" (click)="playAgain()">Try Again</button>
-          <button type="button" class="primary-button" (click)="goBack()">Back to Library</button>
-        </div>
-      </ng-container>
-
-      <ng-container *ngIf="gameState?.status === 'WON' || isSectionEnd()">
-        <h3>🎉 Adventure Complete!</h3>
-        <p>You reached the end of the story.</p>
-        <div class="game-end-actions">
-          <button type="button" class="primary-button" (click)="playAgain()">Play Again</button>
-          <button type="button" class="primary-button" (click)="goBack()">Back to Library</button>
-        </div>
-      </ng-container>
+      <h3>Game Over</h3>
+      <p>Your health reached zero.</p>
+      <button type="button" class="primary-button" (click)="goBack()">Back to Book Selection</button>
     </div>
   </div>
 </div>

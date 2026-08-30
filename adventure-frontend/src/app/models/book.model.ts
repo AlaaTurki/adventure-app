@@ -22,8 +22,6 @@ export interface Book {
   title: string;
   author: string;
   difficulty: string;
-  description?: string;
-  tags?: string[];
   sections: Section[];
 }
 
@@ -33,7 +31,6 @@ export interface GameState {
   currentSectionId: number;
   health: number;
   choices: number[];
-  bookTitle?: string;
   status?: string;
-  isPaused?: boolean;
+  bookTitle?: string;
 }

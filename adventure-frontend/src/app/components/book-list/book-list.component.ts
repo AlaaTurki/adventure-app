@@ -31,8 +31,7 @@ export class BookListComponent implements OnInit {
   loadBooks(): void {
     this.loading = true;
     this.error = null;
-    const difficultyFilter = this.getDifficultyFilterValue();
-    this.bookService.getAllBooks(this.searchTerm, difficultyFilter ?? undefined).subscribe({
+    this.bookService.getAllBooks().subscribe({
       next: (data) => {
         this.books = data;
         this.applyFilters();
@@ -59,20 +58,13 @@ export class BookListComponent implements OnInit {
         (this.activeFilter === 'Fantasy' && (book.difficulty === 'EASY' || book.difficulty === 'MEDIUM')) ||
         (this.activeFilter === 'Adventure' && book.difficulty === 'EASY') ||
         (this.activeFilter === 'High Fantasy' && book.difficulty === 'HARD') ||
+        (this.activeFilter === 'Steampunk Mystery' && book.title.toLowerCase().includes('jade')) ||
         (this.activeFilter === 'Easy' && book.difficulty === 'EASY') ||
         (this.activeFilter === 'Medium' && book.difficulty === 'MEDIUM') ||
         (this.activeFilter === 'Hard' && book.difficulty === 'HARD');
 
       return matchesQuery && matchesFilter;
     });
-  }
-
-  private getDifficultyFilterValue(): string | null {
-    if (this.activeFilter === 'All') return null;
-    if (this.activeFilter === 'Easy') return 'EASY';
-    if (this.activeFilter === 'Medium') return 'MEDIUM';
-    if (this.activeFilter === 'Hard') return 'HARD';
-    return null;
   }
 
   onSearch(): void {
@@ -85,10 +77,18 @@ export class BookListComponent implements OnInit {
   }
 
   selectBook(book: Book): void {
-    if (book.id) {
-      // backend is authoritative; StoryPlayer will start the game when it loads the book
-      this.router.navigate(['/play', book.id]);
+    if (!book.id) {
+      return;
     }
+
+    this.gameStateService.startGame(book.id).subscribe({
+      next: () => {
+        this.router.navigate(['/play', book.id]);
+      },
+      error: () => {
+        this.error = 'Failed to start the adventure. Please confirm the backend is running.';
+      }
+    });
   }
 
   getDifficultyColor(difficulty: string): string {
@@ -105,11 +105,31 @@ export class BookListComponent implements OnInit {
   }
 
   getBookDescription(book: Book): string {
-    return book.description ?? 'No description available.';
+    const title = book.title.toLowerCase();
+    if (title.includes('crystal')) {
+      return 'Deep beneath the mountain lies a network of crystal caves filled with ancient magic and dangerous creatures. Your choices will determine whether you emerge as a hero or become another lost soul in the depths.';
+    }
+    if (title.includes('jade')) {
+      return 'Set sail on the treacherous Jade Sea where pirates rule and treasure awaits the bold. Navigate through storms, rival crews, and ancient curses in this swashbuckling adventure.';
+    }
+    if (title.includes('dragon')) {
+      return 'The kingdom calls for a dragon hunter, and the mountain holds secrets older than most empires. Face fire, fear, and destiny in one final reckless sprint.';
+    }
+    return 'An ancient prison door, a whispering key, and a choice that may change your fate. Survive the darkness and uncover what truly matters.';
   }
 
   getBookTags(book: Book): string[] {
-    return book.tags ?? [];
+    const title = book.title.toLowerCase();
+    if (title.includes('crystal')) {
+      return ['Magic', 'Underground', 'Crystals'];
+    }
+    if (title.includes('jade')) {
+      return ['Pirates', 'Ocean', 'Treasure'];
+    }
+    if (title.includes('dragon')) {
+      return ['Dragons', 'Magic', 'Quest'];
+    }
+    return ['Mystery', 'Prison', 'Escape'];
   }
 
   getBookRuntime(book: Book): string {

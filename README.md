@@ -1,263 +1,190 @@
 # Adventure App
 
-**Adventure App** is a full-stack interactive adventure book application developed as part of a technical assessment.
+## 1. Project overview
 
-The application combines a **Spring Boot REST API** backend with an **Angular** frontend to provide an interactive adventure-book experience. Users can browse available books, search and filter the library, start an adventure, make choices, and progress through different story sections.
+Adventure App is a full-stack interactive story application built with Spring Boot and Angular. It lets users browse a library of adventure books, start a game, read the current section, choose options, and continue until the story ends or the player's health reaches zero.
 
-Players begin each adventure with **10 health points**. Depending on their choices, consequences can modify their health. The adventure ends when the player reaches an ending section or their health reaches zero.
+The project follows a clean client-server pattern: the backend owns the business rules, validation, and game progression, while the frontend focuses on rendering and user interaction.
 
-## Project Structure
+## 2. Architecture
 
-```text
-adventure-app/
-│
-├── adventure-backend/
-│   ├── src/
-│   ├── pom.xml
-│   └── README.md
-│
-├── adventure-frontend/
-│   ├── src/
-│   ├── package.json
-│   └── README.md
-│
-├── .gitignore
-└── README.md
-```
+The application is split into two main parts:
 
-## Architecture
+- Backend: Java 21 + Spring Boot REST API
+- Frontend: Angular + TypeScript + HTML + CSS
 
 ```text
-┌─────────────────────────────┐
-│       Angular Frontend      │
-│                             │
-│  Book Library               │
-│  Search & Filter            │
-│  Game Interface             │
-│  Health & Choices           │
-└──────────────┬──────────────┘
-               │ HTTP / REST
-               ▼
-┌─────────────────────────────┐
-│      Spring Boot API        │
-│                             │
-│  Book Management            │
-│  Book Validation            │
-│  Game Management            │
-│  Navigation                 │
-│  Consequences               │
-│  Health Management          │
-└──────────────┬──────────────┘
-               │
-               ▼
-┌─────────────────────────────┐
-│      Adventure Books        │
-│          JSON Data          │
-└─────────────────────────────┘
+Angular frontend
+  ├─ Book catalog
+  ├─ Search and difficulty filters
+  ├─ Story playback
+  └─ Game interactions
+        │ HTTP
+        ▼
+Spring Boot backend
+  ├─ Book validation
+  ├─ Story loading
+  ├─ Game lifecycle
+  ├─ Health and consequences
+  └─ Saved game support
+        │
+        ▼
+JSON adventure files
 ```
 
-## Main Features
+The backend is the source of truth for game progression, health changes, section transitions, and end-state decisions. Angular consumes the API and displays the resulting state rather than recalculating rules itself.
 
-### Book Library
+## 3. Prerequisites
 
-* Display available adventure books
-* Search books
-* Filter books by difficulty
-* Display book information such as title, author, and difficulty
-
-### Interactive Gameplay
-
-* Start a new adventure
-* Start from the book's `BEGIN` section
-* Display the current section
-* Display available choices
-* Navigate to the selected section
-* Detect ending sections
-
-### Health & Consequences
-
-Each player starts with:
-
-```text
-10 health points
-```
-
-Choices may contain health consequences such as:
-
-```json
-{
-  "type": "HEALTH",
-  "value": "-5",
-  "text": "You are injured."
-}
-```
-
-or:
-
-```json
-{
-  "type": "HEALTH",
-  "value": "+5",
-  "text": "You feel stronger."
-}
-```
-
-When the player's health reaches zero, the adventure ends.
-
-## Book Validation
-
-Books are validated before they can be used by the application.
-
-According to the assessment requirements, a book is invalid when:
-
-* It has no `BEGIN` section
-* It has more than one `BEGIN` section
-* It has no `END` section
-* An option references a non-existing section
-* A non-ending section has no options
-
-Multiple `END` sections are allowed.
-
-## Technologies
-
-### Backend
-
-* Java
-* Spring Boot
-* Maven
-* REST API
-* Jackson
-* JSON
-
-### Frontend
-
-* Angular
-* TypeScript
-* HTML
-* CSS
-* Bootstrap
-
-## Running the Application
-
-API endpoints (backend)
-
-- GET  /api/books
-- GET  /api/books/{id}
-- GET  /api/books?search=...&difficulty=...
-- POST /api/books
-- GET  /api/books/{bookId}/sections/{sectionId}
-
-- POST /api/games/start?bookId={bookId}   (start a new game)
-- GET  /api/games/{gameId}               (get game state)
-- POST /api/games/{gameId}/choices       (body: { "optionIndex": 0 })
-- POST /api/games/{gameId}/save          (save a snapshot)
-- GET  /api/games/saved?bookId={bookId}  (list saved snapshots)
-
-Note: book JSON files are loaded from adventure-backend/files/books at startup for the assessment materials. In production you'd use classpath resources or a managed storage location.
-
-## Assessment Objectives
-
-The implementation follows the objectives in the requested order:
-
-1. **Home page** — book library, search, and filtering
-2. **Basic gameplay** — start an adventure and navigate between sections
-3. **Consequences** — health management and game completion
-4. **Save progression** — additional objective
-5. **Add new books** — additional objective
-
-The project prioritizes the core objectives before the optional features.
-
-## Design Approach
-
-The project separates responsibilities between the frontend and backend.
-
-The backend contains the business rules and game logic, while the Angular application focuses on presentation and user interaction.
-
-This separation makes the application easier to test, maintain, and extend.
-
-## Author
-
-**Alaa Turki**
-
-Senior Full-Stack Developer
-
-This creates a clean client-server architecture where the backend manages data and logic, while the frontend focuses on user interaction and presentation.
-
-## Project structure
-
-- adventure-app/
-  - adventure-backend/
-    - src/
-    - files/books/
-    - pom.xml
-    - README.md
-    - .gitignore
-  - adventure-frontend/
-    - src/
-    - package.json
-    - README.md
-    - .gitignore
-  - README.md
-  - .gitignore
-  - .vscode/
-
-## Features
-
-- Browse a list of adventure books
-- View each book's title, author, and difficulty
-- Open a story and read the current section content
-- Choose from multiple options that lead to new sections
-- Support consequences such as health gain or health loss
-- Load all data from JSON files at startup
-- Expose a REST API for frontend consumption
-- Use an H2 database for quick local development
-
-## Prerequisites
-
-- Java 21+
-- Maven or Maven wrapper
-- Node.js 22+
+- Java 21 or newer
+- Maven Wrapper (included with project)
+- Node.js 22 or newer
 - npm
+- Angular CLI (installed via `npm install` in the frontend project)
 
-## Run the backend
+## 4. Backend setup
+
+From the repository root:
 
 ```bash
-cd adventure-app/adventure-backend
-./mvnw.cmd clean install
-./mvnw.cmd spring-boot:run
+cd adventure-backend
+./mvnw clean install
+./mvnw spring-boot:run
 ```
 
 The backend runs on:
 
-- http://localhost:8080/api
-- H2 console: http://localhost:8080/api/h2-console/
+- http://localhost:8080
 
-## Run the frontend
+If needed, you can inspect the H2 console in a local development setup, but the core assessment uses the REST endpoints directly.
+
+## 5. Frontend setup
+
+From the repository root:
 
 ```bash
-cd adventure-app/adventure-frontend
+cd adventure-frontend
 npm install
 npm start
 ```
 
-Open the app here:
+The frontend runs on:
 
 - http://localhost:4200
 
-## API endpoints
+## 6. How to run
+
+1. Start the backend.
+2. Start the frontend.
+3. Open http://localhost:4200
+4. Browse the available books.
+5. Select a book to begin a game.
+6. Choose a story option to progress through sections.
+
+## 7. API endpoints
 
 ```text
-GET    /api/books
-GET    /api/books/{id}
-GET    /api/books/title/{title}
-GET    /api/books/{bookId}/sections/{sectionId}
-POST   /api/books
+GET    /books
+GET    /books/{id}
+GET    /books/title/{title}
+GET    /books/{bookId}/sections/{sectionId}
+POST   /books
+
+POST   /games/start?bookId={bookId}
+GET    /games/{gameId}
+POST   /games/{gameId}/choices
+POST   /games/{gameId}/save
+GET    /games/saved
 ```
 
-## Notes
+## 8. Book validation rules
 
-- The backend auto-loads story data from `adventure-backend/files/books` at startup.
-- The frontend calls the backend using `http://localhost:8080/api/books`.
+Books are validated before being stored or used in gameplay. A valid book must include:
+
+- exactly one `BEGIN` section
+- at least one `END` section
+- unique section IDs
+- valid `gotoId` references for every option
+- no null choices
+- no null `gotoId` values
+- no non-END section without options
+
+Invalid books are rejected with an appropriate `400 BAD_REQUEST` response.
+
+## 9. Game rules
+
+- Each game starts with 10 health.
+- A choice can apply a health consequence such as `GAIN_HEALTH`, `LOSE_HEALTH`, or a signed numeric health value.
+- When health reaches 0, the game status becomes `DEAD`.
+- When a choice leads to an `END` section, the game status becomes `WON`.
+- Any invalid option index, selection after a completed game, or missing game/book is rejected.
+
+## 10. Save functionality
+
+Users can save the current game snapshot via:
+
+```text
+POST /games/{gameId}/save
+```
+
+Saved games can be listed with:
+
+```text
+GET /games/saved
+```
+
+The response includes saved-game metadata and the serialized game snapshot.
+
+## 11. Project structure
+
+```text
+adventure-app/
+├── README.md
+├── postman_collection.json
+├── adventure-backend/
+│   ├── pom.xml
+│   ├── mvnw
+│   ├── mvnw.cmd
+│   ├── files/
+│   │   └── books/
+│   └── src/
+└── adventure-frontend/
+    ├── package.json
+    ├── package-lock.json
+    ├── angular.json
+    └── src/
+```
+
+## 12. Testing
+
+Backend validation and business rules are covered by JUnit tests. The project includes tests for:
+
+- valid and invalid books
+- game start state
+- health changes and end-state transitions
+- invalid option handling
+- missing book/game scenarios
+
+Run the backend test suite with:
+
+```bash
+cd adventure-backend
+./mvnw test
+```
+
+## 13. Known limitations / assumptions
+
+- The supplied JSON adventure files are the source of assessment data; empty files are preserved instead of inventing new content.
+- The application uses straightforward JSON-driven book definitions rather than a microservice, Kafka, or external data store.
+- The backend enforces the business rules, and the frontend displays the resulting game state.
+- The project intentionally keeps the scope focused on the assessment requirements without adding unrelated infrastructure.
+
+## Author
+
+Alaa Turki
+
+Senior Full-Stack Developer
+
 - The app is designed for local demo and interview use, with an in-memory database to keep setup simple.
 - If the IDE shows red Java classes, refresh or reimport the Maven project and run a compile command. The backend compiles successfully.
 

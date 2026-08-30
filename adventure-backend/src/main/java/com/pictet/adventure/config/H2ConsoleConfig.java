@@ -10,7 +10,11 @@ public class H2ConsoleConfig {
 
     @Bean
     public ServletRegistrationBean<JakartaWebServlet> h2ConsoleServletRegistration() {
-        ServletRegistrationBean<JakartaWebServlet> registration = new ServletRegistrationBean<>(new JakartaWebServlet(), "/h2-console/*");
+        ServletRegistrationBean<JakartaWebServlet> registration = new ServletRegistrationBean<>(
+                new JakartaWebServlet(),
+                "/h2-console/*",
+                "/api/h2-console/*"
+        );
         registration.addInitParameter("webAllowOthers", "true");
         registration.addInitParameter("trace", "false");
         return registration;
