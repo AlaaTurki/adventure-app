@@ -30,7 +30,9 @@ public class DataLoader implements CommandLineRunner {
             "crystal-caverns.json",
             "dragon-quest.json",
             "pirates-jade-sea.json",
-            "the-prisoner.json"
+            "the-prisoner.json",
+            "test.json"
+
     };
 
     private static final String[] BOOK_SEARCH_ROOTS = { "files", "fichiers" };

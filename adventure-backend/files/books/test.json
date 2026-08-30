@@ -1,0 +1,121 @@
+{
+  "title": "Test",
+  "author": "Alaa Turki",
+  "difficulty": "EASY",
+  "sections": [
+    {
+      "id": 1,
+      "text": "You arrive at the Testing Grounds, a proving ground built to try both nerve and luck. Two paths lie ahead: a marked safe trail, and a tangled Thorn Maze that promises a shortcut.",
+      "type": "BEGIN",
+      "options": [
+        {
+          "description": "Take the marked safe trail",
+          "gotoId": 2
+        },
+        {
+          "description": "Cut through the Thorn Maze",
+          "gotoId": 3,
+          "consequence": {
+            "type": "LOSE_HEALTH",
+            "value": "-4",
+            "text": "Thorns rake across your arms as you push through."
+          }
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "text": "The safe trail winds gently past a quiet spring.",
+      "type": "NODE",
+      "options": [
+        {
+          "description": "Drink from the spring",
+          "gotoId": 4,
+          "consequence": {
+            "type": "GAIN_HEALTH",
+            "value": "+3",
+            "text": "The cool water steadies your nerves."
+          }
+        },
+        {
+          "description": "Press on without stopping",
+          "gotoId": 5
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "text": "Deep in the Thorn Maze, the path splits again.",
+      "type": "NODE",
+      "options": [
+        {
+          "description": "Force your way through more thorns",
+          "gotoId": 6,
+          "consequence": {
+            "type": "LOSE_HEALTH",
+            "value": "-4",
+            "text": "More thorns bite into you."
+          }
+        },
+        {
+          "description": "Backtrack to the safe trail",
+          "gotoId": 2
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "text": "Refreshed, you reach the Testing Tower's gate.",
+      "type": "NODE",
+      "options": [
+        {
+          "description": "Enter the tower",
+          "gotoId": 7
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "text": "Tired but unharmed, you reach the Testing Tower's gate.",
+      "type": "NODE",
+      "options": [
+        {
+          "description": "Enter the tower",
+          "gotoId": 7
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "text": "Bruised and bleeding, you stumble out of the maze near a crumbling ledge.",
+      "type": "NODE",
+      "options": [
+        {
+          "description": "Take the narrow ledge shortcut",
+          "gotoId": 8,
+          "consequence": {
+            "type": "LOSE_HEALTH",
+            "value": "-3",
+            "text": "The ledge crumbles beneath your feet."
+          }
+        },
+        {
+          "description": "Take the long way around",
+          "gotoId": 5
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "text": "You pass through the gate and complete the trial. The Testing Grounds accept you as a graduate.",
+      "type": "END",
+      "options": []
+    },
+    {
+      "id": 8,
+      "text": "The ledge gives way entirely.",
+      "type": "END",
+      "options": []
+    }
+  ]
+}
