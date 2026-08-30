@@ -20,4 +20,9 @@
 **/.env.*
 **/.mvn/wrapper/maven-wrapper.jar
 **/*.log
+# Ignore local/zipped exports of the repository
+*.zip
+# Backend test/debug leftovers
+adventure-backend/save_*.txt
+adventure-backend/save_resp*.json
 **/.adventure-app-clean-submission.zip

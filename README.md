@@ -186,7 +186,6 @@ Alaa Turki
 Senior Full-Stack Developer
 
 - The app is designed for local demo and interview use, with an in-memory database to keep setup simple.
-- If the IDE shows red Java classes, refresh or reimport the Maven project and run a compile command. The backend compiles successfully.
 
 ## Documentation
 
