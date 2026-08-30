@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject, Observable, throwError } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { GameState } from '../models/book.model';
 
@@ -50,7 +50,7 @@ export class GameStateService {
   chooseOption(optionIndex: number): Observable<GameState> {
     const current = this.gameState.value;
     if (!current.gameId) {
-      throw new Error('No active game to choose from.');
+      return throwError(() => new Error('No active game to choose from.'));
     }
 
     return this.http.post<GameResponse>(`http://localhost:8080/games/${current.gameId}/choices`, { optionIndex }).pipe(
@@ -68,6 +68,15 @@ export class GameStateService {
         return state;
       })
     );
+  }
+
+  saveGame(): Observable<void> {
+    const current = this.gameState.value;
+    if (!current.gameId) {
+      return throwError(() => new Error('No active game to save.'));
+    }
+
+    return this.http.post<void>(`http://localhost:8080/games/${current.gameId}/save`, {});
   }
 
   getCurrentGameState(): GameState {

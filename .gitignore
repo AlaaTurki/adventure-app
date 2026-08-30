@@ -20,3 +20,4 @@
 **/.env.*
 **/.mvn/wrapper/maven-wrapper.jar
 **/*.log
+**/.adventure-app-clean-submission.zip

@@ -93,6 +93,18 @@ export class StoryPlayerComponent implements OnInit {
     });
   }
 
+  saveProgress(): void {
+    this.error = null;
+    this.gameStateService.saveGame().subscribe({
+      next: () => {
+        this.error = null;
+      },
+      error: (err) => {
+        this.error = err?.error?.message || 'Unable to save your progress right now.';
+      }
+    });
+  }
+
   goBack(): void {
     this.router.navigate(['/']);
   }
