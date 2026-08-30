@@ -31,7 +31,7 @@ public class DataLoader implements CommandLineRunner {
             "dragon-quest.json",
             "pirates-jade-sea.json",
             "the-prisoner.json",
-            "test.json"
+            "Adventure-alaa-test.json"
 
     };
 

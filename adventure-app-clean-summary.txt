@@ -1,0 +1,44 @@
+Adventure App — Submission Summary
+
+Alaa Turki — Senior Full-Stack Developer
+
+Project overview
+A Spring Boot backend and Angular frontend implementing an Adventure Book
+game, built for the Pictet Tech technical assessment.
+
+Run steps
+
+Backend (macOS/Linux):
+  cd adventure-backend && ./mvnw spring-boot:run
+Backend (Windows):
+  cd adventure-backend && .\mvnw.cmd spring-boot:run
+  API root: http://localhost:8080
+
+Frontend:
+  cd adventure-frontend && npm install && npm start
+  UI: http://localhost:4200
+
+H2 console: http://localhost:8080/h2-console
+  JDBC URL: jdbc:h2:mem:adventuredb   User: sa   Password: (blank)
+
+Key features
+- Home page with search and difficulty filtering (Objective 1)
+- Full gameplay loop with health/consequences and win/death states (Objectives 2-3)
+- Server-persisted save progression via /games/{id}/save (Objective 4)
+- Add-new-book feature via /books, validated against the same rules used
+  at startup (Objective 5)
+- Validation rejects: missing/duplicate section ids, invalid gotoId
+  references, non-ending sections with no options, missing/multiple
+  BEGIN sections, missing END sections
+
+Postman collection
+- Import postman_collection.json, set baseUrl to http://localhost:8080
+- Run "POST start game" first — the collection automatically captures
+  the returned id into {{gameId}} for the rest of the requests
+- A dedicated "Validation / Error Cases" folder covers negative-path
+  tests (404s, invalid option index, acting after game end)
+
+GitHub repository
+https://github.com/AlaaTurki/adventure-app
+
+Happy to walk through the code and design decisions during the interview.
