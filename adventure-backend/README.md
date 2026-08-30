@@ -285,7 +285,12 @@ Windows:
 ```powershell
 .\mvnw.cmd test
 ```
-
+## Database
+H2 Console: http://localhost:8080/h2-console
+  JDBC URL: jdbc:h2:mem:adventuredb
+  User: sa
+  Password: (leave blank)
+  
 ## Configuration
 
 Application-specific configuration is located under:
