@@ -26,3 +26,7 @@
 # Backend test/debug leftovers
 adventure-backend/save_*.txt
 adventure-backend/save_resp*.json
+
+# Local-only submission artifacts (not meant to be committed)
+adventure-app-clean-submission.zip
+adventure-app-clean-summary.txt
